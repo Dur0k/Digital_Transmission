@@ -12,5 +12,3 @@ git push origin master
 Get updates
 git pull origin master
 
-Setup auto authentication
-git config credential.helper store
