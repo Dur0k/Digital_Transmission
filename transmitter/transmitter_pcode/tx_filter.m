@@ -1,4 +1,4 @@
-function  tx_filter 
+qfunction  tx_filter 
 %TX_FILTER reconstruct the analog signal by using the ideal low-pass filter 
 %coorperating with the input symbols and zero inserting  
 %
