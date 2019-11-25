@@ -183,10 +183,7 @@ if switch_off == 0
     
     if switch_graph == 1
         figure;
-        bar(cell2mat(tree_stage.sym_list),tree_stage.weight_list)
-        ylabel('probability');
-        xlabel('symbols');
-        title('probability distribution');
+        bar(cell2mat(code_tree_block),
     
 elseif switch_off ==1
     b = u;
