@@ -13,27 +13,27 @@ function x = tx_hardware(s,par_txthresh,switch_graph)
 %   Off: switch_graph = 0;
 %
 
+    x = zeros(length(s),1);
     % Go through every value of s and check if its abs is 
     for i = 1:length(s)
         s_abs = abs(s(i));
-        if (s_abs > par_txthresh)
+        if (s_abs > 1)
             s(i) = s(i)/s_abs;
         end
     end
     x = s;
     
     if switch_graph == 1
-        figure;
-        subplot(2,1,1)
-        plot(real(x));
-        title('Non-Linear Hardware');
-        legend('I');
-        axis([0,length(x) -par_txthresh,par_txthresh])
-        grid on;
+        figure('Name','Hardware','Numbertitle','off');
+        suptitle('Signal nach dem Sendeverstärker');
+        subplot(2,1,1);
+        stem(real(x))
+        xlabel('t');
+        ylabel('Realteil');
+        
         subplot(2,1,2);
-        plot(imag(x));
-        legend('Q');
-        axis([0,length(x) -par_txthresh,par_txthresh])
-        grid on;
+        stem(imag(x))
+        xlabel('t');
+        ylabel('Imaginärteil');
     end
 end
