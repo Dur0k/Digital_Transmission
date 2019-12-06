@@ -18,10 +18,10 @@ a = analog_source(par_no, switch_reset, 0);
 u = ad_conversion(a, par_w, par_q, 0);
 [b,code_trees, len_idx] = source_coding(u, par_scblklen, 0, 0);
 
-[b_buf]=tx_fifo(b, par_fifolen, par_ccblklen, 0);
+[b_buf]=tx_fifo(b, par_fifolen, par_ccblklen, 1);
 
 c=channel_coding(b_buf,par_H,0);
-d=modulation(c,0,0);
+d=modulation(c,0,1);
 
 
 s=10*tx_filter(d,par_tx_w,1);

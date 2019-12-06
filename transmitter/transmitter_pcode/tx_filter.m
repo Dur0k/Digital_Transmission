@@ -15,7 +15,7 @@ function  [s] = tx_filter(d,par_tx_w,switch_graph)
     %   d1 d2 d3 d4
 
     z = zeros(par_tx_w-1,length(d));
-    tmp = [d;z];
+    tmp = [d';z];
     d_up = reshape(tmp,1,size(tmp,1)*size(tmp,2));
 
 
@@ -27,7 +27,7 @@ function  [s] = tx_filter(d,par_tx_w,switch_graph)
     si_norm = si./sqrt(par_tx_w);
 
     % Convole the complex symbols with the sinc impulse
-    s = conv(du,sinorm);
+    s = conv(d_up,si_norm);
 
     if switch_graph == 1
         figure;

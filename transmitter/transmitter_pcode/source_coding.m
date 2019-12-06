@@ -180,6 +180,7 @@ if switch_off == 0
         len_idx = [len_idx, code_length];
         code_tree{nr} = code_tree_block; 
     end
+    b=b';
     
     if switch_graph == 1
         figure;
