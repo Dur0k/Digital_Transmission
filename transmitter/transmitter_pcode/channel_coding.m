@@ -1,30 +1,29 @@
-function channel_coding
-%CHANNEL_CODING excutes the switchable hamming encoding function
-%
-%   [c] = channel_coding(b,par_H,switch_off)
-%
-%   The Hamming encoding here uses the common [7,4,3] Hamming code with the
-%   given parity-check matrix to encode the input binary signal b.
-%
-%   the encoding principle is simply given by b*G = c and the basic matrix
-%   transformation between parity-check matrix and generator matrix based on
-%   the principle of GH^T = 0.
-%
-%   Parameter 'par_H' indicates the parity-check matrix in standard (or 
-%   systematic) form, which needs to be provided. The corresponding generator 
-%   matrix will be automatically generated in this block. 
-%
-%   Parameter 'switch_off' indicates the command of switch off the hamming
-%   coding functionality or not with switch_off = 1 telling the block to
-%   turn it on.
-%
-%   
+function y = channel_coding( x, H, disableflag )
 
-
-    end
-
+if disableflag || isempty(x)
+    % exception handling
+    y = x;
+else
+    % determine parameters
+    k_prty = size(H, 1);
+    N_tot = size(H, 2);
+    n_data = N_tot - k_prty;
+    n_words = length(x)/n_data;
+        
+    % create generator matrix
+    G = [eye(n_data); H(:,1:n_data)];
     
-% end
-       
-% end
+    % declare variable
+    y = zeros(N_tot, n_words);
+    
+    % reshape input block
+    x_shpd = reshape(x, [n_data n_words]);
+    
+    % create hamming code by performing matrix multiplication for each word
+    for ii=1:n_words
+         y(:,ii) = mod(G*x_shpd(:,ii), 2);
+    end
+    y = y(:);
+end
 
+end
