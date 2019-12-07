@@ -13,7 +13,8 @@ function x = tx_hardware(s,par_txthresh,switch_graph)
 %   Off: switch_graph = 0;
 %
 
-    % Go through every value of s and check if its abs is 
+    % Go through every value of s and check if its abs is larger then
+    % thresh
     for i = 1:length(s)
         s_abs = abs(s(i));
         if (s_abs > par_txthresh)
