@@ -12,14 +12,12 @@ function  [s] = tx_filter(d,par_tx_w,switch_graph)
 
 
     % Insert par_tx_w-1 zeros between each sample
-    %   d1 d2 d3 d4
-
     z = zeros(par_tx_w-1,length(d));
     tmp = [d';z];
     d_up = reshape(tmp,1,size(tmp,1)*size(tmp,2));
 
 
-    % Create a sinc with x values of -24 to 24
+    % Create a sinc of sufficient length
     x_si = [-3*par_tx_w:3*par_tx_w];
     si = sinc(x_si/par_tx_w);
 

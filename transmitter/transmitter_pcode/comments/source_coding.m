@@ -26,7 +26,6 @@ if switch_off == 0
     b=[];
     len_idx = [];
     code_tree = {};
-    
     % Repeat huffman coding for all nr_blocks
     for nr = 1:nr_blocks
         % u_block with length par_scblklen or rest of u if remaining length
@@ -42,22 +41,33 @@ if switch_off == 0
         nr_combinations = 2^nr_bits;
 
         % Generate all posible bit vector combinations based on nrbits of u
+        % https://stackoverflow.com/questions/9767321/how-to-generate-all-possible-combinations-n-bit-strings
         combinations = dec2bin(0:2^nr_bits-1) - '0';
 
         % Search u_block for occurences of bit vector combinations and store them in zocc
         occ = zeros(nr_combinations,1);
+        %uind = zeros(length(u_block),1);
         for i=1:nr_combinations
+            % With find and ismember the matching positions of the bit vector are
+            % returned as a vector
             tmp_occ = find(ismember(u_block,combinations(i, :),'rows'));
+            % Based on the size of the vector the number of occurences are stored
+            % uind 
             occ(i) = size(tmp_occ,1);
+            %uind(tmp_occ) = i;
         end
 
         % Rewrite the number of occurences as a percentage to get the weight of
         % each bit vector
         weight = occ./size(u_block,1);
 
-        
         % Huffman code
-        % Sort the weight and return the index of weights in ascending order
+        % https://sourceforge.net/p/octave/communications/ci/default/tree/inst/huffmandict.m
+                    % sym = ['a' 'b' 'c' 'd' 'e'];
+                    % weight = [0.1 0.15 0.15 0.4 0.2];
+
+        % Sort the weight and return the index of weights in
+        % ascending order
         [~,index]=sort(weight);
         index = flip(index);
         S = length(weight);
@@ -65,7 +75,7 @@ if switch_off == 0
         % put the sorted weight in a matlab cell type
         tree_stage = {};
         tree_stage.weight_list = weight(index)';
-        % assign index value to a cell
+        % assign each index value to a cell array to later on combine symbols
         for i = 1:S
             tree_stage.sym_list{i} = index(i);
         end
@@ -74,35 +84,66 @@ if switch_off == 0
         cw_list = cell(1, S);
         tree_list = {};
         
-        % Combine weights and indices until all are combined in one
+        % Loop until only two combined symbols are left 
         I = 1;
         while (I < S)
             % Save the current stage of the tree
+                        %	weight_list: [0.4000 0.2000 0.1500 0.1500 0.1000]
+                        %	sym_list: {[4]  [5]  [3]  [2]  [1]}
             tree_list{I} = tree_stage;
+            
+            % Determine the current lenght of weight vector
             L = length(tree_stage.weight_list);
-            % Sum up the 2 smallest weights        %
+            % Sum up the 2 smallest weights
             nweight = tree_stage.weight_list(L-1) + tree_stage.weight_list(L);
             % Create a new symbol from symbols that just got summed up
             nsym = [tree_stage.sym_list{L-1}(1:end), tree_stage.sym_list{L}(1:end)];
-            % check on which position to insert the new weight
+
+            % check on which position to insert the new weight and symbol by
+            % counting up until a place is found
             for p = 1:(L-2)
                 if (tree_stage.weight_list(p) < nweight)
                     break;
-                end
+                end;
             end
-            
             % Insert the weight to the list and discard the two smallest values
+                        %   weight_list: [0.4000 0.2500 0.2000 0.1500]
+                        %   sym_list: {[4]}    {[2 1]}    {[5]}    {[3]}
             tree_stage.weight_list = [tree_stage.weight_list(1:p-1) nweight tree_stage.weight_list(p:L-2)];
             tree_stage.sym_list = {tree_stage.sym_list{1:p-1}, nsym, tree_stage.sym_list{p:L-2}};
+
             I = I + 1;
         end
 
-        
-        % Reverse the tree, assign 1s and 0s and store in cw_list
+        % Reverse the tree        
         I = I - 1;
         while (I > 0)
+            % 
             tree_stage = tree_list{I};
             L = length(tree_stage.sym_list);
+            % assign the smallest weight a 0 and the second smallest a 1
+                        % Starting with:
+                        %   weight_list: [0.6000 0.4000]
+                        %   sym_list: {[5 3 2 1]  [4]}
+                        % Results in:
+                        %   cw_list: {[1]} {[1]} {[1]} {[0]} {[1]}
+                        %%%
+                        % Next loop:
+                        %   weight_list: [0.4000 0.3500 0.2500]
+                        %   sym_list: {[4]  [5 3]  [2 1]}
+                        % Results in:
+                        %   cw_list: {[10]} {[10]} {[11]} {[0]} {[11]}
+                        %%%
+                        % Next loop:
+                        %   weight_list: [0.4000 0.2500 0.2000 0.1500]
+                        %   sym_list: {[4]  [2 1]  [5]  [3]}
+                        %   cw_list: {[10]} {[10]} {[110]} {[0]} {[111]}
+                        %%%
+                        % Last loop:
+                        %   weight_list: [0.4000 0.2000 0.1500 0.1500 0.1000]
+                        %   sym_list: {[4]  [5]  [3]  [2]  [1]}
+                        %   cw_list: {[100]} {[101]} {[110]} {[0]} {[111]}
+
             % Assign 0s and 1s to symbols         
             symbols = tree_stage.sym_list{L};
             for k = 1:length(symbols)
@@ -113,7 +154,6 @@ if switch_off == 0
             for k = 1:length(symbols)
                 cw_list{1,symbols(k)} = [cw_list{1,symbols(k)} 1];
             end
-            
             I = I - 1;
         end
     
@@ -135,12 +175,13 @@ if switch_off == 0
                 end
             end
         end
-        
+    
+        %
         len_idx = [len_idx, code_length];
         code_tree{nr} = code_tree_block; 
     end
-    
     b=b';
+    
     if switch_graph == 1
         figure;
         bar(cell2mat(tree_stage.sym_list),tree_stage.weight_list)
@@ -148,7 +189,6 @@ if switch_off == 0
         xlabel('symbols');
         title('probability distribution');
     
-% Don't use huffman, just output bit stream        
 elseif switch_off ==1
     b = u;
     b = reshape(b,size(u,1)*size(u,2),1);
