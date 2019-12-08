@@ -7,9 +7,9 @@ Delta = 2/2^n_bits;
 y = zeros(ceil(length(x)/L_dwn), n_bits);
 
 % downsampling and quantization
-a_dwn = x(1:L_dwn:end) + 1;
-a_dwn(a_dwn==0) = Delta;
-q = ceil((a_dwn-Delta)/Delta);
+a_dwn = x(1:L_dwn:end) + 1; ... raise values by 1 to get target interval [0 2]
+a_dwn(a_dwn==0) = Delta; ... round up lowest values to get target interval [Delta 2]
+q = ceil((a_dwn-Delta)/Delta); ... substract Delta and deivde by Delta to get target interval [0 2^n-1]
 
 % dec2bin conversion
 for jj = 1:length(q)

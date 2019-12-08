@@ -5,19 +5,19 @@ if disableflag || isempty(x)
     y = x;
 else
     % determine parameters
-    k_prty = size(H, 1);
-    N_tot = size(H, 2);
-    n_data = N_tot - k_prty;
-    n_words = length(x)/n_data;
+    k_prtyBits = size(H, 1); ... number of parity bits per word
+    N_totBits = size(H, 2); ... number of total bits per word
+    n_dataBits = N_totBits - k_prtyBits; ... number of data bits per word
+    n_words = length(x)/n_dataBits; ... number of words within input chunk
         
     % create generator matrix
-    G = [eye(n_data); H(:,1:n_data)];
+    G = [eye(n_dataBits); H(:,1:n_dataBits)]; ... is derived by parity check matrix
     
     % declare variable
-    y = zeros(N_tot, n_words);
+    y = zeros(N_totBits, n_words);
     
     % reshape input block
-    x_shpd = reshape(x, [n_data n_words]);
+    x_shpd = reshape(x, [n_dataBits n_words]); ... one word per column
     
     % create hamming code by performing matrix multiplication for each word
     for ii=1:n_words
