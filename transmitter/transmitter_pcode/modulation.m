@@ -17,7 +17,7 @@ I = zeros(n_words, 1);
 Q = zeros(n_words, 1);
 
 % reshape input block
-w = reshape(x, [n_bits n_words]); ... one word per column
+w = reshape(x, [n_bits n_words]); ... matrix of data words -- one word per column
 
 if modtoggle
     %% PSK16

@@ -17,11 +17,11 @@ else
     y = zeros(N_totBits, n_words);
     
     % reshape input block
-    x_shpd = reshape(x, [n_dataBits n_words]); ... one word per column
+    w = reshape(x, [n_dataBits n_words]); ... matrix of data words -- one word per column
     
     % create hamming code by performing matrix multiplication for each word
     for ii=1:n_words
-         y(:,ii) = mod(G*x_shpd(:,ii), 2);
+         y(:,ii) = mod(G*w(:,ii), 2);
     end
     y = y(:);
 end
