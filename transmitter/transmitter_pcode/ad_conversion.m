@@ -24,7 +24,9 @@ end
 
 % graphical output
 if showflag
-    stem((q+1)*Delta-1);
+    stem((q+1)*Delta-1)
+    hold on
+    plot(((q+1)*Delta-1)-a_dwn+1);
 end
 
 end
