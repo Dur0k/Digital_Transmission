@@ -85,7 +85,7 @@ if switch_off == 0
             % Create a new symbol from symbols that just got summed up
             nsym = [tree_stage.sym_list{L-1}(1:end), tree_stage.sym_list{L}(1:end)];
             % check on which position to insert the new weight
-            for p = 1:(L-2)
+            for p = 1:(L-1)
                 if (tree_stage.weight_list(p) < nweight)
                     break;
                 end
@@ -106,12 +106,12 @@ if switch_off == 0
             % Assign 0s and 1s to symbols         
             symbols = tree_stage.sym_list{L};
             for k = 1:length(symbols)
-                cw_list{1,symbols(k)} = [cw_list{1,symbols(k)} 0];
+                cw_list{1,symbols(k)} = [cw_list{1,symbols(k)} 1];
             end
 
             symbols = tree_stage.sym_list{L-1};
             for k = 1:length(symbols)
-                cw_list{1,symbols(k)} = [cw_list{1,symbols(k)} 1];
+                cw_list{1,symbols(k)} = [cw_list{1,symbols(k)} 0];
             end
             
             I = I - 1;
