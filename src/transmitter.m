@@ -1,8 +1,9 @@
 clear; close all; clc
 
 % parameter setting
-%addpath('transmitter_pcode');
-%addpath('transmitter_self-made');
+addpath('transmitter');
+addpath('receiver');
+
 N = 5;
 par_no = 1*2*100; ... number of samples from source (must be multiple of source coding chunk size)
 switch_reset = 1; ... reset source and clear buffers

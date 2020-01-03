@@ -1,6 +1,9 @@
 clear all;
 close all;
 
+addpath('../receiver');
+addpath('../transmitter');
+
 switch_off = 0;
 switch_graph = 1;
 par_scblklen = 100;

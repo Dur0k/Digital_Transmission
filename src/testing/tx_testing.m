@@ -1,5 +1,7 @@
 clear; close all; clc
 
+addpath('../receiver');
+addpath('../transmitter');
 % parameter setting
 par_no = 1000;
 switch_reset = 1;
