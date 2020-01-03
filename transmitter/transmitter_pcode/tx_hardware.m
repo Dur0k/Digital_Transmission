@@ -29,12 +29,12 @@ function x = tx_hardware(s,par_txthresh,switch_graph)
         plot(real(x));
         title('Non-Linear Hardware');
         legend('I');
-        axis([0,length(x) -par_txthresh,par_txthresh])
+        %axis([0,length(x), -par_txthresh,par_txthresh])
         grid on;
         subplot(2,1,2);
         plot(imag(x));
         legend('Q');
-        axis([0,length(x) -par_txthresh,par_txthresh])
+        %axis([0,length(x), -par_txthresh,par_txthresh])
         grid on;
     end
 end

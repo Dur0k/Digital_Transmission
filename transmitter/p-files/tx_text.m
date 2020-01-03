@@ -21,7 +21,10 @@ u = ad_conversion(a, par_w, par_q, 0);
 [b_buf]=tx_fifo(b, par_fifolen, par_ccblklen, 1);
 
 c=channel_coding(b_buf,par_H,0);
-d=modulation(c,0,1);
+%c=[0 0 0 0]
+c = dec2bin(0:2^4-1) - '0';
+c=c';
+d=modulation(c(:),1,1);
 
 
 s=10*tx_filter(d,par_tx_w,1);

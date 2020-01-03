@@ -27,18 +27,22 @@ function  [s] = tx_filter(d,par_tx_w,switch_graph)
     % Convole the complex symbols with the sinc impulse
     s = conv(d_up,si_norm);
 
+    if length(d)==0
+        s=[];
+    end
+    
     if switch_graph == 1
         figure;
         subplot(2,1,1)
         plot(real(s));
         title('Tx filter');
         legend('I');
-        axis([0,length(s) -1,1])
+        %axis([0,length(s) -1,1])
         grid on;
         subplot(2,1,2);
         plot(imag(s));
         legend('Q');
-        axis([0,length(s) -1,1])
+        %axis([0,length(s) -1,1])
         grid on;
     end
 end
