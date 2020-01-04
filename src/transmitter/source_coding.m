@@ -84,9 +84,11 @@ if switch_off == 0
             nweight = tree_stage.weight_list(L-1) + tree_stage.weight_list(L);
             % Create a new symbol from symbols that just got summed up
             nsym = [tree_stage.sym_list{L-1}(1:end), tree_stage.sym_list{L}(1:end)];
-            % check on which position to insert the new weight
+            % find first position to insert the new weight
             for p = 1:(L-1)
-                if (tree_stage.weight_list(p) < nweight)
+                if (tree_stage.weight_list(p) == nweight)
+                    break;
+                elseif (tree_stage.weight_list(p) < nweight)
                     break;
                 end
             end
