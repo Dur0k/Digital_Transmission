@@ -121,10 +121,11 @@ if switch_off == 0
     
     
         % Encode u to get b with cw_list
+        % Sort code words by occurance
         code_tree_block = {};
         for i = 1:S
-            code_tree_block.sym_list{i} = combinations(i,:);
-            code_tree_block.cw{i} = cw_list{i};
+            code_tree_block.sym_list{i} = combinations(index(i),:);
+            code_tree_block.cw{i} = cw_list{index(i)};
         end
         
         code_length = 0;
