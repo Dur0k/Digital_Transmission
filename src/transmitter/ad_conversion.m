@@ -24,9 +24,11 @@ end
 
 % graphical output
 if showflag
+    figure;
     stem((q+1)*Delta-1)
     hold on
     plot(((q+1)*Delta-1)-a_dwn+1);
+    title('ad conversion');
 end
 
 end
