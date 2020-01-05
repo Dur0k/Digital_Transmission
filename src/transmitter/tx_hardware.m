@@ -27,7 +27,7 @@ function x = tx_hardware(s,par_txthresh,switch_graph)
         figure;
         subplot(2,1,1)
         plot(real(x));
-        title('Non-Linear Hardware');
+        title('Non-Linear Tx Hardware');
         legend('I');
         %axis([0,length(x), -par_txthresh,par_txthresh])
         grid on;
