@@ -13,7 +13,7 @@ function  [s] = tx_filter(d,par_tx_w,switch_graph)
 
     % Insert par_tx_w-1 zeros between each sample
     z = zeros(par_tx_w-1,length(d));
-    tmp = [d';z];
+    tmp = [d.';z];
     d_up = reshape(tmp,1,size(tmp,1)*size(tmp,2));
 
 

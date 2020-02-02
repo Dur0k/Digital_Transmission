@@ -6,19 +6,24 @@ addpath('transmitter/');
 addpath('receiver/');
 
 %56+i*8
-d = [1, 1, -1+j, 0-j, 1+j, 1+j]';
-s = tx_filter(d, par_tx_w, 0);
-s= [1 1 s];
+data = [1+1j; 1+1j; 1+1j; 1+1j];
+d = [1; 1; -1+1j; 0-1j; 1+1j; 1+1j];
+[d_c] = tx_channel_est(d, data, 0);
+s = tx_filter(d_c, par_tx_w, 1);
+%s_p = tx_filter(p, par_tx_w, 0);
 
-z = channel_rayleigh(s,100,0);
-[d_tilde] = rx_filter(z,par_tx_w,1)
+z = channel_rayleigh(s,50,0);
+[d_tilde] = rx_filter(z,par_tx_w,1);
 
 %phase=mean(mean(angle(s)-angle(z)));
-phase=mean(angle(z(1:2)'./s(1:2)));
-zz =  z  .* exp(1j*(phase));
-absz = abs(s(1:2)/zz(1:2)');
+%phase=mean(angle(z(1:2)'./s(1:2)));
+phase=mean(mean(angle(d_tilde(1:4).'./p(1:4))));
 
+zz =  z  .* exp(-1j*(phase));
+absz = mean(abs(p(1:4)./d_tilde(1:4)));
+%freq = sum(real(d_tilde(1:4))./real(p(1:4))+1j*imag(d_tilde(1:4))./imag(p(1:4)))/length(p);
 zz = zz.*absz;
+d_tilde_shift = d_tilde .* exp(-1j*(phase)).*absz;
 
 figure;
 subplot(2,1,1);
