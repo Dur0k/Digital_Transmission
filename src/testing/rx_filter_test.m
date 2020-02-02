@@ -17,6 +17,7 @@ switch_graph = 1;
 
 % input
 d = [0+1j 1 0+1j 1 0+1j 1+1j 1+1j 1+1j]';
+d = [0+1j -1-1j]';
 [s] = tx_filter(d,par_tx_w,switch_graph);
 s_tilde = s;
 [d_tilde] = rx_filter(s_tilde,par_rx_w,switch_graph);

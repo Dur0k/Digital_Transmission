@@ -4,7 +4,7 @@ clear; close all; clc
 addpath('transmitter');
 addpath('receiver');
 
-N = 5;
+N = 2;
 par_no = 1*2*100; ... number of samples from source (must be multiple of source coding chunk size)
 switch_reset = 1; ... reset source and clear buffers
 par_w = 2; ... downsampling factor prior to A/D conversion (must be an integer)
