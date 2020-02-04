@@ -1,13 +1,13 @@
-clear; close all; clc
+clear all; close all; clc
 
 addpath('../receiver');
 addpath('../transmitter');
 % parameter setting
-par_no = 200;
+par_no = 100;
 switch_reset = 1;
 par_w = 2;
 par_q = 8;
-par_scblklen = 200;
+par_scblklen = 50;
 switch_off = 1;
 par_fifolen = 3000;
 par_ccblklen = 1600;

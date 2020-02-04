@@ -14,12 +14,15 @@ else
         % do until block is empty
         while (~isempty(tmp_block))
             for i = 1:length(tmp_cw)
-                if (ismember(tmp_block(1:length(tmp_cw{i}))',tmp_cw{i},'rows'))
-                    tmp_block = tmp_block(length(tmp_cw{i})+1:end);
-                    tmp_out = [tmp_out; tmp_sym{i}];
+                if (length(tmp_block) >= length(tmp_cw{i}))
+                    if (isequal(tmp_block(1:length(tmp_cw{i}))',tmp_cw{i}))
+                        tmp_block = tmp_block(length(tmp_cw{i})+1:end);
+                        tmp_out = [tmp_out; tmp_sym{i}];
+                        break;
+                    end
+                else%if (i == length(tmp_cw))
+                    tmp_block = []; 
                     break;
-
-                error('source_decoding: bit combination not found');
                 end
             end
         end

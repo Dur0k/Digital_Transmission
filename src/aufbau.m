@@ -37,17 +37,17 @@ b_buf = tx_fifo(b, par_fifolen, par_ccblklen, switch_reset);
 c = channel_coding(b_buf, par_H, switch_off);
 d = modulation(c, switch_mod, 0);
 s = tx_filter(d, par_tx_w, 0);
-x = 10*tx_hardware(s, par_txthresh, 0);
+x = tx_hardware(s, par_txthresh, 0);
 y = channel(x, par_SNRdB, 0);       
 switch_reset = 0;
 
 % receiver
 [s_tilde] = rx_hardware(y,par_rxthresh,switch_graph);
-[d_tilde] = rx_filter(s_tilde,par_rx_w,switch_graph);
+[d_tilde] = rx_filter(s_tilde,par_rx_w,1);
 c_hat = demodulation(d_tilde,switch_mod,switch_graph);
 b_hat = channel_decoding(c_hat,par_H,switch_off);
 b_hat_buf = rx_fifo(b_hat,par_fifolen,sum(len_idx),switch_reset);
-%u_hat = source_decoding(b_hat_buf, code_tree, len_idx, switch_off);
+u_hat = source_decoding(b_hat_buf, code_tree, len_idx, switch_off);
 %[a_tilde] = da_conversion(u_hat, par_w, par_q, switch_graph);
 %[MSE, BER_u, BER_c, BER_b] = analog_sink(a, a_tilde, u, u_hat, c, c_hat, b, b_hat);
 

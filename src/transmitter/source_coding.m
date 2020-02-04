@@ -22,6 +22,10 @@ function [b, code_tree, len_idx] = source_coding(u,par_scblklen,switch_off,switc
 %   'len_idx': record the block sizes of each block (either using the length 
 %   index of coded block or using 'b' for source decoding )
 if switch_off == 0
+    if length(u) < par_scblklen
+        error('length(u) < par_scblklen');
+    end
+    
     nr_blocks = ceil(length(u)/par_scblklen);
     b=[];
     len_idx = [];

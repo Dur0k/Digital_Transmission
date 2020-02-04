@@ -1,5 +1,5 @@
 function [MSE, BER_u, BER_c, BER_b] = analog_sink(a, a_tilde, u, u_hat, c, c_hat, b, b_hat)
-if isempty(a_tilde)
+if isempty(a_tilde) | isempty(u_hat) | isempty(c_hat) | isempty(b_hat)
    MSE = inf;
    BER_u = inf;
    BER_c = inf;
