@@ -16,16 +16,19 @@ par_rx_w = par_tx_w;
 switch_graph = 1;
 
 % input
-d = [0+1j 1 0+1j 1 0+1j 1+1j 1+1j 1+1j]';
-d = [0+1j -1-1j]';
+%d = [0+1j -1 1+1j 1 0+1j 1+1j 1+1j 1+1j].';
+d = [0 0 0 0 0 0 0 1+1j 0 0 0 1]';
+h = rcosdesign(1,26,4);
+y = filter(h,1,d);
+figure;plot(real(y))
 [s] = tx_filter(d,par_tx_w,switch_graph);
-s_tilde = s;
-[d_tilde] = rx_filter(s_tilde,par_rx_w,switch_graph);
-figure;
-subplot(2,1,1);
-plot(real(d_tilde))
-subplot(2,1,2);
-plot(imag(d_tilde))
-disp('Input == Output:');
-dd = round(d_tilde);
-disp(isequal(d,dd'));
+%s_tilde = s;
+%[d_tilde] = rx_filter(s_tilde,par_rx_w,switch_graph);
+%figure;
+%subplot(2,1,1);
+%plot(real(d_tilde))
+%subplot(2,1,2);
+%plot(imag(d_tilde))
+%disp('Input == Output:');
+%dd = round(d_tilde);
+%disp(isequal(d,dd'));

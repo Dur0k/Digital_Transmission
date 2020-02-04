@@ -7,10 +7,17 @@ par_tx_w = 8;
 data = [1+1j; 1+1j; 1+1j; 1+1j];
 d = [1; 1; -1+1j; 0-1j; 1+1j; 1+1j];
 
-[d_c] = tx_channel_est(d, data, 0);
-s = tx_filter(d_c, par_tx_w, 1);
+w = (dec2bin(0:15, 4) - '0')';
+c = w(:);
 
-y = channel_rayleigh(s,100,0);
+%  processing
+d = modulation(c, 0, 1);
+
+[d_c] = tx_channel_est(d, data, 1);
+s = tx_filter(d_c, par_tx_w, 1);
+%s = [data.' s];
+
+y = channel_rayleigh(s,200,0);
 
 [d_tilde] = rx_filter(y,par_tx_w,1);
 

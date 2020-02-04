@@ -14,7 +14,8 @@ iNmbrOfWrds = 16;
 f = randi(N+1, iNmbrOfWrds, 1)-1;
 e = zeros(iNmbrOfWrds,N);
 e(sub2ind(size(e), find(f>0), f(f>0))) = 1;
-e = e';
+e = e';data = [1];
+
 
 % input
 w = (dec2bin(0:15, 4) - '0')';

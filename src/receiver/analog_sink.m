@@ -1,4 +1,10 @@
 function [MSE, BER_u, BER_c, BER_b] = analog_sink(a, a_tilde, u, u_hat, c, c_hat, b, b_hat)
+if isempty(a_tilde)
+   MSE = inf;
+   BER_u = inf;
+   BER_c = inf;
+   BER_b = inf;
+else
     len = length(a_tilde);
     % MSE
     MSE = 1/length(a(1:len)) .* sum(a(1:len) - a_tilde(1:len))^2;
@@ -9,4 +15,5 @@ function [MSE, BER_u, BER_c, BER_b] = analog_sink(a, a_tilde, u, u_hat, c, c_hat
     BER_c = sum(sum(abs(c(1:len)-c_hat(1:len))))/len;
     len = length(b_hat);
     BER_b = sum(abs(b(1:len)-b_hat(1:len)))/len;
+end
 end
