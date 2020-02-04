@@ -6,11 +6,11 @@ function  [d_tilde] = rx_filter(s_tilde,par_rx_w,switch_graph)
     % Normalize the sinc impulse
     si_norm = si./sqrt(par_rx_w);
     % Convole the complex symbols with the sinc impulse
-    s_filter = conv(s_tilde,si_norm)./sum(si_norm);%./sqrt(par_rx_w);
-    % Downsample
-    d_tilde = s_filter(1:par_rx_w:end);
+    s_filter = conv(s_tilde,si_norm);
     % Discard extra values from sinc 
-    d_tilde = d_tilde(3*2+1:end-3*2);
+    d_tilde = s_filter(3*2*par_rx_w+1:end-3*2*par_rx_w);
+    % Downsample
+    d_tilde = d_tilde(1:par_rx_w:end);
     
     if switch_graph == 1
         figure;
