@@ -2,49 +2,30 @@ function y = modulation( x, modtoggle, showflag )
 
 % set parameters
 n_bits = 4;
-G1 = [0 1;
-      1 0];
-G2 = [1 0;
-      1 1];
-M = [2^1 2^0];
+G1 = [1 1 0 0;
+      0 1 1 0;
+      0 0 1 1;
+      0 0 0 1];
+G2 = [1 1;
+      0 1];
 
 % determine parameters
 n_words = length(x)/n_bits; ... number of words within input chunk
 
 % declare variables
-c = zeros(n_bits, n_words);
-I = zeros(n_words, 1);
-Q = zeros(n_words, 1);
-
-% reshape input block
-w = reshape(x, [n_bits n_words]); ... matrix of data words -- one word per column
+w = reshape(x, [n_bits n_words])';
 
 if modtoggle
-    %% PSK16
-    % time-devision demux -- split bit stream in half (process each crumb of 2 bits seperately)
-    for kk=1:n_words
-        % rearrange order of 2 bit crumbs and gray mapping
-        c(1:2,kk) = mod(G2*G1*w(1:2,kk), 2); ... 1st crumb of 2 bits
-        c(3:4,kk) = mod(mod(sum(w(1:2,kk)), 2)+G2*w(3:4,kk), 2); ... 2nd crumb of 2 bits
-        % bin2dec conversion
-        I(kk) = M*c(1:2,kk);
-        Q(kk) = M*c(3:4,kk);
-    end
-    % angle mapping
-    y = exp( 1j*(I*pi/2 + Q*pi/8 + pi/16 + pi) );
+    % PSK16 -- gray mapping, BIN to DEC conversion, angle mapping, offset/rescale
+    c = mod(w*G1, 2);
+%     c = [mod(w(:,1:end/2)*G2, 2) mod(w(:,end/2+1:end)*G2, 2)];
+%     c([1:n_bits 16-n_bits+1:16],:) = mod(c([1:n_bits 16-n_bits+1:16],:)+[1 0 0 0], 2);
+%     c(n_bits+1:3*n_bits,:) = mod(c(n_bits+1:3*n_bits,:)+[0 0 1 1], 2);
+    y = exp(2j*pi/n_words * bi2de(c, 'left-msb') + 1j*pi/n_words);
 else
-    %% QAM16
-    % time-devision demux -- split bit stream in half (process each crumb of 2 bits seperately)
-    for kk=1:n_words
-        % rearrange order of 2 bit crumbs and gray mapping
-        c(1:2,kk) = mod(G2*w(1:2,kk), 2); ... 1st crumb of 2 bits
-        c(3:4,kk) = mod(G2*w(3:4,kk), 2); ... 2nd crumb of 2 bits
-        % bin2dec conversion
-        I(kk) = M*c(1:2,kk);
-        Q(kk) = M*c(3:4,kk);
-    end
-    % cartesian mapping and power adjustment
-    y = ( (I*2-3) + 1j*(Q*2-3) ) / sqrt(3^2+1);
+    % QAM16 -- cut data word in half, gray mapping, BIN to DEC conversion, cartesian mapping, offset/rescale
+    c = [mod(w(:,1:end/2)*G2, 2) mod(w(:,end/2+1:end)*G2, 2)];
+    y = ( (bi2de(c(:,1:end/2), 'left-msb')*2-3) + 1j*(bi2de(c(:,end/2+1:end), 'left-msb')*2-3) ) / sqrt(3^2+1);
 end
 
 % graphical output

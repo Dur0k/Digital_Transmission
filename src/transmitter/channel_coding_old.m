@@ -11,21 +11,19 @@ else
     n_words = length(x)/n_dataBits; ... number of words within input chunk
         
     % create generator matrix
-%     G = [eye(n_dataBits); H(:,1:n_dataBits)]; ... is derived by parity check matrix
-    G = [1 1 0 1;
-         1 0 1 1;
-         1 0 0 0;
-         0 1 1 1;
-         0 1 0 0;
-         0 0 1 0;
-         0 0 0 1];
-
+    G = [eye(n_dataBits); H(:,1:n_dataBits)]; ... is derived by parity check matrix
+    
+    % declare variable
+    y = zeros(N_totBits, n_words);
+    
     % reshape input block
     w = reshape(x, [n_dataBits n_words]); ... matrix of data words -- one word per column
-
+    
     % create hamming code by performing matrix multiplication for each word
-    c = mod(G*w, 2);
-    y = c(:);
+    for ii=1:n_words
+         y(:,ii) = mod(G*w(:,ii), 2);
+    end
+    y = y(:);
 end
 
 end
