@@ -1,4 +1,7 @@
 function  [d_tilde] = rx_filter(s_tilde,par_rx_w,switch_graph)
+if isempty(s_tilde)
+   d_tilde = []; 
+else
     % Create a sinc of sufficient length
     x_si = [-3*par_rx_w:3*par_rx_w];
     si = sinc(x_si/par_rx_w);
@@ -26,4 +29,5 @@ function  [d_tilde] = rx_filter(s_tilde,par_rx_w,switch_graph)
         %axis([0,length(s) -1,1])
         grid on;
     end
+end
 end

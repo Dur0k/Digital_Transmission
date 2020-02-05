@@ -24,7 +24,7 @@ else
         Q(Q<0) = 0;
         
         %c = [de2bi((real(x)*sqrt(3^2+1)+3)/2, 2, 'left-msb') de2bi((imag(x)*sqrt(3^2+1)+3)/2, 2, 'left-msb')];
-        c = [de2bi(round(I)) de2bi(round(Q))];
+        c = [de2bi(round(I), 'left-msb') de2bi(round(Q), 'left-msb')];
         w = [mod(c(:,1:end/2)*G2, 2) mod(c(:,end/2+1:end)*G2, 2)]';
     end
     y = w(:);

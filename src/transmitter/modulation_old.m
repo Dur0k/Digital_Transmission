@@ -1,4 +1,4 @@
-function y = modulation( x, modtoggle, showflag )
+function y = modulation_old( x, modtoggle, showflag )
 
 % set parameters
 n_bits = 4;
