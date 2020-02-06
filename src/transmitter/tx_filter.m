@@ -1,48 +1,40 @@
 function  [s] = tx_filter(d,par_tx_w,switch_graph)
-    %TX_FILTER reconstruct the analog signal by using the ideal low-pass filter 
-    %coorperating with the input symbols and zero inserting  
-    %
-    %   [ s ] = tx_filter(d,par_tx_w,switch_graph)
-    %
-    %   'par_tx_w' is the oversampling for the zero inserting, e.g., par_tx_w = 8.
-    %
-    %   Switchable graph of the output of the ideal low-pass filter with
-    %   On:  switch_graph = 1;
-    %   Off: switch_graph = 0;
-
-
-    % Insert par_tx_w-1 zeros between each sample
+if isempty(d)
+   s = []; 
+else
+    % design filter impulse response
+    beta = 1;
+    iFiltOrd = 64;
+    L = par_tx_w; ... T_symbol/T_sample (oversampling factor)
+    h = rcosdesign(beta, iFiltOrd/L, L);%/sqrt(par_tx_w);  
+    h = h * 1/sqrt(par_tx_w) * 1/max(h);
     z = zeros(par_tx_w-1,length(d));
     tmp = [d.';z];
-    d_up = reshape(tmp,1,size(tmp,1)*size(tmp,2));
+    d_up = tmp(:);
 
-
-    % Create a sinc of sufficient length
-    x_si = [-3*par_tx_w:3*par_tx_w];
-    si = sinc(x_si/par_tx_w);
-
-    % Normalize the sinc impulse
-    si_norm = si./sqrt(par_tx_w);
-
-    % Convole the complex symbols with the sinc impulse
-    s = conv(d_up,si_norm);
-
-    if length(d)==0
-        s=[];
-    end
+    %sr = filtfilt(h,1,real(d_up));
+    %si = filtfilt(h,1,imag(d_up));
+    %s = sr + 1j*si;
+    s = conv(d_up,h.');
+    %s = s *L/sum(h);
+    %filter = rcosdesign(0.5,7,par_tx_w); % RRC-Filter mit Roll-off-Faktor 0.5 und einer Dauer von 6 Symbolen
+    %filter = (1/sqrt(par_tx_w))*(h/max(h)); % Normierung
+    %s = conv(d_up, filter);    % Filterung
+    
     
     if switch_graph == 1
         figure;
         subplot(2,1,1)
         plot(real(s));
         title('Tx filter');
-        legend('I');
+        ylabel('I');
         %axis([0,length(s) -1,1])
         grid on;
         subplot(2,1,2);
         plot(imag(s));
-        legend('Q');
+        ylabel('Q');
         %axis([0,length(s) -1,1])
         grid on;
     end
+end
 end

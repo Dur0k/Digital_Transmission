@@ -14,12 +14,12 @@ function [s_tilde] = rx_hardware(y,par_rxthresh,switch_graph)
         subplot(2,1,1)
         plot(real(y));
         title('Non-Linear Rx Hardware');
-        legend('I');
+        ylabel('I');
         %axis([0,length(x), -par_txthresh,par_txthresh])
         grid on;
         subplot(2,1,2);
         plot(imag(y));
-        legend('Q');
+        ylabel('Q');
         %axis([0,length(x), -par_txthresh,par_txthresh])
         grid on;
     end

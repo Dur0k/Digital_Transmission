@@ -8,7 +8,7 @@ par_q = 8;
 par_scblklen = 100;
 switch_off = 0;
 par_fifolen = 10000;
-par_ccblklen = 480;%640;%1600;
+par_ccblklen = 512;%640;%1600;
 par_tx_w = 8;
 par_H = [1 0 1 0 1 0 1;
          0 1 1 0 0 1 1;
@@ -19,10 +19,10 @@ switch_graph = 0;
 switch_mod = 1;
 par_txthresh = 1;
 par_rxthresh = par_txthresh;
-par_SNRdB = 30;
+par_SNRdB = 20;
 rayleigh = 0;
 data = [1+1j; 1+1j; 1+1j; 1+1j];
-N = 2;
+N = 5;
 
 c = [];
 d = [];
@@ -38,6 +38,10 @@ fprintf('run\t\tMSE\t\tBER_u\t\tBER_c\t\tBER_b\n');
 
 len_b = [];
 codes = [];
+%in_a = [];
+%in_u = [];
+%in_c = [];
+%in_b = [];
 for kk=1:N
 % source
 a = analog_source(par_no, switch_reset, 0);
@@ -55,21 +59,22 @@ x = tx_hardware(s, par_txthresh, switch_graph);
 if rayleigh 
     y = channel_rayleigh(s,par_SNRdB,switch_graph);
 else
-    y = channel(x, par_SNRdB, switch_graph);
+    y = channel(x, par_SNRdB, 0);
 end
 
 % channel
 len_b = [len_b; len_idx];
+%in_a = [in_a; a]
 codes = [codes; code_tree];
 switch_reset = 0;
 
+%s_tilde = s;
 % receiver
 [s_tilde] = rx_hardware(y,par_rxthresh,switch_graph);
 [d_tilde] = rx_filter(s_tilde,par_rx_w,switch_graph);
 if rayleigh
     [d_tilde] = rx_channel_est(d_tilde,data,switch_graph);
 end
-d_tilde = d;
 c_hat = demodulation(d_tilde,switch_mod,switch_graph);
 b_hat = channel_decoding(c_hat,par_H,switch_off);
 b_hat_buf = rx_fifo(b_hat,par_fifolen, len_b(1),switch_reset);
